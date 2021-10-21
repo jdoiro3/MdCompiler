@@ -1,0 +1,21 @@
+{
+  "name": "markdown-to-html",
+  "version": "1.0.0",
+  "description": "A CLI to compile Markdown files to a Github styled HTML file.",
+  "main": "bin/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joseph Doiron",
+  "license": "MIT",
+  "bin": {
+    "compile_md": "./bin/index.js"
+  },
+  "dependencies": {
+    "github-markdown-css": "^5.0.0",
+    "highlight.js": "^11.3.1",
+    "marked": "^3.0.7",
+    "node_modules-path": "^2.0.5",
+    "yargs": "^17.2.1"
+  }
+}
