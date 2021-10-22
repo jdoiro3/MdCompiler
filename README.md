@@ -31,3 +31,9 @@ def foo():
 ## Output
 
 <img width="705" alt="compile_md-example" src="https://user-images.githubusercontent.com/57968347/138459965-b5861132-b01d-4307-8e96-566a9c00cff4.PNG">
+
+# Setup
+
+1. Download [Node.js](https://nodejs.org/en/download/) ([what is Node.js?](https://en.wikipedia.org/wiki/Node.js))
+2. `npm install -g git+https://github.com/jdoiro3/MdCompiler.git`
+3. `compile_md -h`
