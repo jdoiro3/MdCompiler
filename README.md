@@ -37,3 +37,22 @@ def foo():
 1. Download [Node.js](https://nodejs.org/en/download/) ([what is Node.js?](https://en.wikipedia.org/wiki/Node.js))
 2. `npm install -g git+https://github.com/jdoiro3/MdCompiler.git`
 3. `compile_md -h`
+
+# VScode Setup
+
+Using Vscode and the [Run on Save](https://marketplace.visualstudio.com/items?itemName=emeraldwalk.RunOnSave) extension, you can sync a markdown file to an html output.
+
+1. Download [Run on Save](https://marketplace.visualstudio.com/items?itemName=emeraldwalk.RunOnSave)
+2. Open Vscode's `settings.json` and append the below entry
+```json
+"emeraldwalk.runonsave": {
+        "commands": [
+            {
+                "match": "\\.md$",
+                "cmd": "compile_md -f \"${file}\" -o \"${fileBasenameNoExt}.html\" -s dark"
+            },
+        ]
+    }
+```
+
+
