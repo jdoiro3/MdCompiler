@@ -84,26 +84,28 @@ const code_style = fs.readFileSync(`${node_modules_path}\\highlight.js\\styles\\
 
 const html = `
 <!DOCTYPE html>
-<style>
-    html {
-        background-color: #0d1117;
-    }
-    ${code_style}
-    ${github_style}
-	.markdown-body {
-		box-sizing: border-box;
-		min-width: 200px;
-		max-width: 980px;
-		margin: 0 auto;
-		padding: 45px;
-	}
+<head>
+    <style>
+        html {
+            background-color: #0d1117;
+        }
+        ${code_style}
+        ${github_style}
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 45px;
+        }
 
-	@media (max-width: 767px) {
-		.markdown-body {
-			padding: 15px;
-		}
-	}
-</style>
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
 <article class="markdown-body">
 	${marked(markdownString)}
 </article>`
