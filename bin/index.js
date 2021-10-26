@@ -1,15 +1,26 @@
 #! /usr/bin/env node
 
 // import all required modules
-const path = require('path')
+const path = require('path');
 const node_modules = require('node_modules-path');
 const yargs = require("yargs");
 const marked = require("marked");
 const hljs   = require('highlight.js');
 const fs = require('fs');
+const cheerio = require('cheerio');
 // get the key used to call index.js
 const package_json = require('../package.json');
-const command_name = Object.keys(package_json.bin)[0]
+const command_name = Object.keys(package_json.bin)[0];
+
+const image_types = {
+	".png": "image/png",
+	".gif": "image/gif",
+	".jpg": "image/jpeg",
+	".jpeg": "image/jpeg",
+	".bmp": "image/bmp",
+	".svg": "image/svg+xml",
+	".webp": "image/webp"
+};
 
 function fileExists(filename) {
     try {
@@ -29,6 +40,7 @@ var argv = yargs(process.argv.slice(2))
     .alias('f', 'file').nargs('f', 1).describe('f', 'load a file')
     .alias('o', 'output').nargs('o', 1).describe('o', 'specify file to output, including .html')
     .alias('s', 'style').describe('s', 'style to use').choices('s', ["light", "dark"])
+    .alias('sc', 'self_contained').describe('sc', 'encodes all local images to base64 for a self contained document').boolean('sc')
     .demandOption(['f', 'o'])
     .help('h')
     .alias('h', 'help')
@@ -82,7 +94,8 @@ const markdownString = fs.readFileSync(argv.file,"utf8");
 const github_style = fs.readFileSync(`${node_modules_path}\\github-markdown-css\\${style_file}`, "utf8");
 const code_style = fs.readFileSync(`${node_modules_path}\\highlight.js\\styles\\${code_highlight_file}`, "utf8");
 
-const html = `
+// create html file
+var html = `
 <!DOCTYPE html>
 <head>
     <style>
@@ -108,10 +121,44 @@ const html = `
 </head>
 <article class="markdown-body">
 	${marked(markdownString)}
-</article>`
+</article>`;
 
+if (argv.self_contained) {
+    // convert all image tags to self-contained images, using base64 encoding
+    var $ = cheerio.load(html);
+    $('html').find('img').each(function () {
+        if ($(this).attr('src')) {
+            var img_path = $(this).attr('src').split('?')[0];
+            try {
+                var protocol = new URL(img_path).protocol;
+            } catch(e) {
+                if (e instanceof TypeError) {
+                    var protocol = "";
+                } else {
+                    console.log(`Error: ${e}`);
+                }
+            };
+            if (fs.existsSync(img_path) & protocol.slice(0,4) !== "http") {
+                var img_file = fs.readFileSync(img_path);
+                var content_type = image_types[path.extname(img_path)] || 'image/png';
+                var data_uri = "data:" + content_type + ";base64," + img_file.toString("base64");
+                $(this).attr('src', data_uri);
+            // image doesn't exist and the protocol isn't http(s)
+            } else if (!fs.existsSync(img_path) & protocol.slice(0,4) !== "http") {
+                console.log(`Error: image '${img_path}' not found`);
+            };
+        }
+    });
+    var html = $.html();
+};
+
+// write html to file
 fs.writeFileSync(argv.output,  html);
-console.log(`Success: ${argv.file} -> ${argv.output}`);
+if (argv.self_contained) {
+    console.log(`Success: ${argv.file} -> self contained ${argv.output}`);
+} else {
+    console.log(`Success: ${argv.file} -> ${argv.output}`);
+}
 
 
 
