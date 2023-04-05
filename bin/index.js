@@ -91,8 +91,8 @@ if (argv.style === "light" || argv.style === "dark") {
 
 const node_modules_path = node_modules();
 const markdownString = fs.readFileSync(argv.file,"utf8");
-const github_style = fs.readFileSync(`${node_modules_path}\\github-markdown-css\\${style_file}`, "utf8");
-const code_style = fs.readFileSync(`${node_modules_path}\\highlight.js\\styles\\${code_highlight_file}`, "utf8");
+const github_style = fs.readFileSync(`${node_modules_path}/github-markdown-css/${style_file}`, "utf8");
+const code_style = fs.readFileSync(`${node_modules_path}/highlight.js/styles/${code_highlight_file}`, "utf8");
 
 // create html file
 var html = `
