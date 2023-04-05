@@ -106,8 +106,8 @@ var html = `
         ${github_style}
         .markdown-body {
             box-sizing: border-box;
-            min-width: 200px;
-            max-width: 980px;
+            min-width: 70vw;
+            max-width: 90vw;
             margin: 0 auto;
             padding: 45px;
         }
